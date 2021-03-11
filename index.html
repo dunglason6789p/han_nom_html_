@@ -42,8 +42,10 @@ function appendWithSpace(originalStr, appendingStr) {
 function firstVietWord(viet) {
   return viet.trim().split(',')[0].trim();
 }
-function lookupKanji() {
+function searchByInput() {
   const inputText = document.querySelector('#elmId_kanjiInput').value.replaceAll(/ /g, '');
+  saveSearchToLocalstorage(inputText);
+  createDatalistShowingSavedSearches();
   if (inputText.length === 1) {
     const entry = lookupKanjiSingle(inputText);
     document.querySelector('#elmId_lookupResult').innerHTML = myTemplate1(entry);
@@ -60,14 +62,75 @@ function lookupKanji() {
     document.querySelector('#elmId_lookupResult').innerHTML = myTemplate2(vietStrBuilder, listKanjiViet);
   }
 }
+function saveSearchToLocalstorage(inputText) {
+  if (inputText) {
+    const ls_savedSearches = localStorage.getItem("saved_searches");
+    if (ls_savedSearches) {
+      try {
+        const savedSearches = JSON.parse(ls_savedSearches);
+        savedSearches.push(inputText);
+        localStorage.setItem("saved_searches", JSON.stringify(savedSearches));
+      } catch (e) {
+        console.error(e);
+      }
+    } else {
+      localStorage.setItem("saved_searches", JSON.stringify([]));
+    }
+  }
+}
+function retrieveSavedSearchFromLocalstorage() {
+  const ls_savedSearches = localStorage.getItem("saved_searches");
+  if (ls_savedSearches) {
+    try {
+      const savedSearches = JSON.parse(ls_savedSearches);
+      if (Array.isArray(savedSearches)) {
+        return savedSearches;
+      } else {
+        console.error("Malformed savedSearches in localStorage!");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  } else {
+    localStorage.setItem("saved_searches", JSON.stringify([]));
+  }
+  return [];
+}
+function createDatalistShowingSavedSearches() {
+  const savedSearches = retrieveSavedSearchFromLocalstorage();
+  let datalistStr = '';
+  for (const savedSearch of savedSearches) {
+    datalistStr += `<option value="${savedSearch}">`;
+  }
+  document.querySelector('#elmId_kanjiDataList').innerHTML = datalistStr;
+}
+function addListenerOnPressEnterInput() {
+  const input = document.querySelector('#elmId_kanjiInput');
+  input.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+      searchByInput();
+    }
+  });
+}
+window.onload = function() {
+  createDatalistShowingSavedSearches();
+  addListenerOnPressEnterInput();
+}
   </script>
 </head>
 <body>
 <div style="margin-left: 500px; font-size: 20px">
   <div>
     <label for="elmId_kanjiInput">Insert Kanji here:</label>
-    <input id="elmId_kanjiInput"/>
-    <button onclick="lookupKanji()">Find</button>
+    <input id="elmId_kanjiInput" list="elmId_kanjiDataList"/>
+    <datalist id="elmId_kanjiDataList">
+      <!--<option value="Chocolate">
+      <option value="Coconut">
+      <option value="Mint">
+      <option value="Strawberry">
+      <option value="Vanilla">-->
+    </datalist>
+    <button onclick="searchByInput()">Find</button>
   </div>
   <div id="elmId_lookupResult"></div>
 </div>
