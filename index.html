@@ -5,6 +5,9 @@
   <title>Title</title>
   <script src="data.js"></script>
   <script>
+function inputElm() {
+  return document.querySelector('#elmId_kanjiInput');
+}
 function lookupKanjiSingle(kanjiChar) {
   return DICTIONARY.filter(it=>it.kanji === kanjiChar)[0];
 }
@@ -43,7 +46,7 @@ function firstVietWord(viet) {
   return viet.trim().split(',')[0].trim();
 }
 function searchByInput() {
-  const inputText = document.querySelector('#elmId_kanjiInput').value.replaceAll(/ /g, '');
+  const inputText = inputElm().value.replaceAll(/ /g, '');
   saveSearchToLocalstorage(inputText);
   createDatalistShowingSavedSearches();
   if (inputText.length === 1) {
@@ -62,6 +65,9 @@ function searchByInput() {
     document.querySelector('#elmId_lookupResult').innerHTML = myTemplate2(vietStrBuilder, listKanjiViet);
   }
 }
+function resetSavedSearchIntoLocalstorage() {
+  localStorage.setItem("saved_searches", JSON.stringify([]));
+}
 function saveSearchToLocalstorage(inputText) {
   if (inputText) {
     const ls_savedSearches = localStorage.getItem("saved_searches");
@@ -74,7 +80,7 @@ function saveSearchToLocalstorage(inputText) {
         console.error(e);
       }
     } else {
-      localStorage.setItem("saved_searches", JSON.stringify([]));
+      resetSavedSearchIntoLocalstorage();
     }
   }
 }
@@ -92,29 +98,33 @@ function retrieveSavedSearchFromLocalstorage() {
       console.error(e);
     }
   } else {
-    localStorage.setItem("saved_searches", JSON.stringify([]));
+    resetSavedSearchIntoLocalstorage();
   }
   return [];
 }
 function createDatalistShowingSavedSearches() {
   const savedSearches = retrieveSavedSearchFromLocalstorage();
   let datalistStr = '';
-  for (const savedSearch of savedSearches) {
-    datalistStr += `<option value="${savedSearch}">`;
+  for (let i = savedSearches.length - 1; i >= 0; i--) {
+    datalistStr += `<option value="${savedSearches[i]}">`;
   }
   document.querySelector('#elmId_kanjiDataList').innerHTML = datalistStr;
 }
 function addListenerOnPressEnterInput() {
-  const input = document.querySelector('#elmId_kanjiInput');
+  const input = inputElm();
   input.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
       searchByInput();
     }
   });
 }
+function focusOnInputElm() {
+  inputElm().focus();
+}
 window.onload = function() {
   createDatalistShowingSavedSearches();
   addListenerOnPressEnterInput();
+  focusOnInputElm();
 }
   </script>
 </head>
