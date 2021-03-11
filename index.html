@@ -31,7 +31,7 @@ function myTemplate2A(text) {
 function myTemplate2B(list) {
   let html = '';
   for (const item of list) {
-    html += `<div><span>${item.kanji}</span>=><span>${item.viet}</span></div>`
+    html += `<div><span>${item.kanji}</span>=><span>${item.viet}</span>&nbsp(<span>${item.mean}<span>)</div>`
   }
   return html;
 }
@@ -59,7 +59,8 @@ function searchByInput() {
     for (const kanjiChar of characterList) {
       const entry = lookupKanjiSingle(kanjiChar);
       const viet = firstVietWord(entry && entry.viet || '?');
-      listKanjiViet.push({kanji: kanjiChar, viet: viet})
+      const meaning = entry && entry.mean;
+      listKanjiViet.push({kanji: kanjiChar, viet: viet, mean: meaning})
       vietStrBuilder = appendWithSpace(vietStrBuilder, viet);
     }
     document.querySelector('#elmId_lookupResult').innerHTML = myTemplate2(vietStrBuilder, listKanjiViet);
@@ -74,8 +75,10 @@ function saveSearchToLocalstorage(inputText) {
     if (ls_savedSearches) {
       try {
         const savedSearches = JSON.parse(ls_savedSearches);
-        savedSearches.push(inputText);
-        localStorage.setItem("saved_searches", JSON.stringify(savedSearches));
+        if (savedSearches.indexOf(inputText) < 0) {
+          savedSearches.push(inputText);
+          localStorage.setItem("saved_searches", JSON.stringify(savedSearches));
+        }
       } catch (e) {
         console.error(e);
       }
