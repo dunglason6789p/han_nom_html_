@@ -39,6 +39,9 @@ function appendWithSpace(originalStr, appendingStr) {
     return '' + appendingStr;
   }
 }
+function firstVietWord(viet) {
+  return viet.trim().split(',')[0].trim();
+}
 function lookupKanji() {
   const inputText = document.querySelector('#elmId_kanjiInput').value.replaceAll(/ /g, '');
   if (inputText.length === 1) {
@@ -50,7 +53,7 @@ function lookupKanji() {
     let vietStrBuilder = '';
     for (const kanjiChar of characterList) {
       const entry = lookupKanjiSingle(kanjiChar);
-      const viet = entry && entry.viet || '?'
+      const viet = firstVietWord(entry && entry.viet || '?');
       listKanjiViet.push({kanji: kanjiChar, viet: viet})
       vietStrBuilder = appendWithSpace(vietStrBuilder, viet);
     }
