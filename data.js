@@ -1008,6 +1008,7 @@ DICTIONARY = function() {
   const dictionaryExtra = `
 液/dịch/?/chất lỏng
 剤/tễ/?/thuốc
+索/sách/?/?
 `;
   const dictionaryRawSplitList = dictionaryRaw.split(/\r?\n/).map(it=>it.trim()).filter(it=>it.length > 0);
   for (const dictionaryRawSplit of dictionaryRawSplitList) {
