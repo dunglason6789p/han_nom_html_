@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="data.js"></script>
+  <script>
+function lookupKanji() {
+  const kanji = document.querySelector('#elmId_kanjiInput').value.trim();
+  const entry = DICTIONARY.filter(it=>it.kanji === kanji)[0];
+  document.querySelector('#elmId_lookupResult').innerHTML =
+`<div>
+  <div>Âm Việt: <span>${entry.viet}</span></div>
+  <div>Hiragana: <span>${entry.hira}</span></div>
+  <div>Giải nghĩa: <span>${entry.mean}</span></div>
+</div>`;
+}
+  </script>
+</head>
+<body>
+<div>
+  <label for="elmId_kanjiInput">Insert Kanji here:</label>
+  <input id="elmId_kanjiInput"/>
+  <button onclick="lookupKanji()">Find</button>
+</div>
+<div id="elmId_lookupResult"></div>
+</body>
+</html>
