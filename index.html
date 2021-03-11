@@ -58,8 +58,8 @@ function searchByInput() {
     let vietStrBuilder = '';
     for (const kanjiChar of characterList) {
       const entry = lookupKanjiSingle(kanjiChar);
-      const viet = firstVietWord(entry && entry.viet || '?');
-      const meaning = entry && entry.mean;
+      const viet = firstVietWord(entry && entry.viet || kanjiChar);
+      const meaning = entry && entry.mean || '?';
       listKanjiViet.push({kanji: kanjiChar, viet: viet, mean: meaning})
       vietStrBuilder = appendWithSpace(vietStrBuilder, viet);
     }
