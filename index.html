@@ -63,11 +63,13 @@ function lookupKanji() {
   </script>
 </head>
 <body>
-<div>
-  <label for="elmId_kanjiInput">Insert Kanji here:</label>
-  <input id="elmId_kanjiInput"/>
-  <button onclick="lookupKanji()">Find</button>
+<div style="margin-left: 500px; font-size: 20px">
+  <div>
+    <label for="elmId_kanjiInput">Insert Kanji here:</label>
+    <input id="elmId_kanjiInput"/>
+    <button onclick="lookupKanji()">Find</button>
+  </div>
+  <div id="elmId_lookupResult"></div>
 </div>
-<div id="elmId_lookupResult"></div>
 </body>
 </html>

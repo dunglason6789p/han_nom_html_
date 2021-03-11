@@ -1005,12 +1005,23 @@ DICTIONARY = function() {
 典	điển	ten	cổ điển, điển tích
 
 `;
+  const dictionaryExtra = `
+液/dịch/?/chất lỏng
+剤/tễ/?/thuốc
+`;
   const dictionaryRawSplitList = dictionaryRaw.split(/\r?\n/).map(it=>it.trim()).filter(it=>it.length > 0);
   for (const dictionaryRawSplit of dictionaryRawSplitList) {
     // console.log(dictionaryRawSplit);
     const parts = dictionaryRawSplit.split('\t');
     dictionary.push({kanji:parts[0],viet:parts[1],hira:parts[2],mean:parts[3]});
   }
+
+  const dictionaryExtraSplitList = dictionaryExtra.split(/\r?\n/).map(it=>it.trim()).filter(it=>it.length > 0);
+  for (const dictionaryExtraSplit of dictionaryExtraSplitList) {
+    const parts = dictionaryExtraSplit.split('/');
+    dictionary.push({kanji:parts[0],viet:parts[1],hira:parts[2],mean:parts[3]});
+  }
+
   console.log(dictionary);
   return dictionary;
 }();
