@@ -31,7 +31,7 @@ function myTemplate2A(text) {
 function myTemplate2B(list) {
   let html = '';
   for (const item of list) {
-    html += `<div><span>${item.kanji}</span>=><span>${item.viet}</span>&nbsp(<span>${item.mean}<span>)</div>`
+    html += `<div><span>${item.kanji}</span>=><span>${item.vietFull}</span>&nbsp(<span>${item.mean}<span>)</div>`
   }
   return html;
 }
@@ -59,8 +59,9 @@ function searchByInput() {
     for (const kanjiChar of characterList) {
       const entry = lookupKanjiSingle(kanjiChar);
       const viet = firstVietWord(entry && entry.viet || kanjiChar);
+      const vietFull = entry && entry.viet || '?'
       const meaning = entry && entry.mean || '?';
-      listKanjiViet.push({kanji: kanjiChar, viet: viet, mean: meaning})
+      listKanjiViet.push({kanji: kanjiChar, viet: viet, vietFull: vietFull, mean: meaning})
       vietStrBuilder = appendWithSpace(vietStrBuilder, viet);
     }
     document.querySelector('#elmId_lookupResult').innerHTML = myTemplate2(vietStrBuilder, listKanjiViet);
