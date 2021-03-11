@@ -15,8 +15,22 @@ function myTemplate1(entry) {
   <div>Giải nghĩa: <span>${entry.mean}</span></div>
 </div>`;
 }
-function myTemplate2(text) {
+function myTemplate2(text,list) {
+  return `<div>
+<div>${myTemplate2A(text)}</div>
+<div>---</div>
+<div>${myTemplate2B(list)}</div>
+</div>`
+}
+function myTemplate2A(text) {
   return `<span>${text}</span>`;
+}
+function myTemplate2B(list) {
+  let html = '';
+  for (const item of list) {
+    html += `<div><span>${item.kanji}</span>=><span>${item.viet}</span></div>`
+  }
+  return html;
 }
 function appendWithSpace(originalStr, appendingStr) {
   if (originalStr.length > 0) {
@@ -26,19 +40,21 @@ function appendWithSpace(originalStr, appendingStr) {
   }
 }
 function lookupKanji() {
-  const inputText = document.querySelector('#elmId_kanjiInput').value.trim();
+  const inputText = document.querySelector('#elmId_kanjiInput').value.replaceAll(/ /g, '');
   if (inputText.length === 1) {
     const entry = lookupKanjiSingle(inputText);
     document.querySelector('#elmId_lookupResult').innerHTML = myTemplate1(entry);
   } else if (inputText.length > 1) {
     const characterList = inputText.split('');
+    const listKanjiViet = [];
     let vietStrBuilder = '';
     for (const kanjiChar of characterList) {
       const entry = lookupKanjiSingle(kanjiChar);
       const viet = entry && entry.viet || '?'
+      listKanjiViet.push({kanji: kanjiChar, viet: viet})
       vietStrBuilder = appendWithSpace(vietStrBuilder, viet);
     }
-    document.querySelector('#elmId_lookupResult').innerHTML = myTemplate2(vietStrBuilder);
+    document.querySelector('#elmId_lookupResult').innerHTML = myTemplate2(vietStrBuilder, listKanjiViet);
   }
 }
   </script>
