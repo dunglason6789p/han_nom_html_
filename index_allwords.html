@@ -44,15 +44,21 @@ function printCategoryWordsIntoTable(categoryDataList) {
   let stringBuilder = '';
   for (const wordInfo of categoryDataList) {
     try {
-      const kanjiList = wordInfo.kanji.split('');
       const vietList = [];
       const romajiList = [];
-      for (const kanjiChar of kanjiList) {
-        const entry = lookupKanjiSingle(kanjiChar);
-        const vietSingle = firstVietWord(entry.viet);
-        vietList.push(vietSingle);
-        const romaji = entry.hira;
-        romajiList.push(romaji);
+      const kanjisRaw = wordInfo.kanji;
+      if (kanjisRaw) {
+        const kanjiList = kanjisRaw.split('');
+        for (const kanjiChar of kanjiList) {
+          const entry = lookupKanjiSingle(kanjiChar);
+          if (entry) {
+            vietList.push(firstVietWord(entry.viet));
+            romajiList.push(entry.hira);
+          } else {
+            vietList.push(`<${kanjiChar}>`);
+            romajiList.push(`<${kanjiChar}>`);
+          }
+        }
       }
       //"hira":"にんげん","kanji":"人間","meanEn":"human","romaji":"ningen"
       stringBuilder += `<tr>
