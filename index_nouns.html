@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="data.js"></script>
+  <script src="data_nouns.js"></script>
+  <script src="common_func.js"></script>
+  <script>
+let selectedCategoryData = null; //global.
+function categorySelectElm() {
+  return document.querySelector("#elmId_categorySelect");
+}
+function readDataNouns() {
+  const categoryNameList = DATA_NOUNS.map(it=>it.title);
+  let strBuilder = '';
+  categoryNameList.forEach((categoryName,index)=>{
+      strBuilder += `<option value="${index}">${categoryName}</option>`;
+  });
+  const elm_categorySelect = categorySelectElm();
+  elm_categorySelect.innerHTML = strBuilder;
+}
+function addListenerOnCategorySelect() {
+  const elm_categorySelect = categorySelectElm();
+  elm_categorySelect.onchange = function() {
+    console.log("select change!");
+    selectedCategoryData = DATA_NOUNS[elm_categorySelect.value];
+    console.log(selectedCategoryData);
+  };
+}
+function testLookup(i) {
+  const characterList = selectedCategoryData.data[i].kanji.split('');
+  for (const kanjiChar of characterList) {
+    const entry = lookupKanjiSingle(kanjiChar);
+    const viet = firstVietWord(entry && entry.viet || kanjiChar);
+    const vietFull = entry && entry.viet || '?';
+    const meaning = entry && entry.mean || '?';
+    console.log({kanji: kanjiChar, viet: viet, vietFull: vietFull, mean: meaning});
+  }
+}
+window.onload = function() {
+    readDataNouns();
+    addListenerOnCategorySelect();
+};
+  </script>
+</head>
+<body>
+<div>
+  <label for="elmId_categorySelect">Select category:</label>
+  <select name="cars" id="elmId_categorySelect">
+    <!--<option value="volvo">Volvo</option>
+    <option value="saab">Saab</option>
+    <option value="opel">Opel</option>
+    <option value="audi">Audi</option>-->
+  </select>
+</div>
+</body>
+</html>
